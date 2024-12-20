@@ -42,9 +42,9 @@ public class SecurityConfig
     
 
 	@Bean
-	public UserUserDetailsService userDetailsService()
+	public UserAuthorityService userDetailsService()
 	{ 
-		return new UserUserDetailsService();
+		return new UserAuthorityService();
 	}
 
 	@Bean

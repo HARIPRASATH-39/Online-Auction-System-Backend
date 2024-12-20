@@ -12,6 +12,8 @@ import com.cts.auction.Entity.UserEntity;
 import com.cts.auction.Exception.UserNotFoundException;
 import com.cts.auction.Repository.UserRepository;
 import com.cts.auction.Validation.UserDTO;
+import org.slf4j.Logger; 
+import org.slf4j.*;
 @Service
 public class UserService {
 	
@@ -20,14 +22,22 @@ public class UserService {
 	
 	@Autowired
 	PasswordEncoder passwordEncode;
+	
+	
+	private static final Logger logger = LoggerFactory.getLogger(UserService.class);
 
 	
 	
 	public String signup(UserDTO userdto) {
+		
+		logger.info("Attempting to sign up user with email: {}",userdto.getEmail());
+				
 		UserEntity dbPerson = userRepository.findByEmail(userdto.getEmail());
 		boolean user_already_registered = dbPerson != null ? true : false;
 		if(user_already_registered)
 		{
+			logger.warn("The email address is already registered: {}",userdto.getEmail());
+					
 			return "The email address is already registered.";
 		}
 		else { 
@@ -44,6 +54,9 @@ public class UserService {
 		        .build();
 			
 			userRepository.save(user);
+			
+		 logger.info("Account created successfully for email: {}",userdto.getEmail());
+			
 			return "Account created successfuly";
 		
 		}
@@ -52,15 +65,21 @@ public class UserService {
 
 	public String login(UserEntity user) {
 		
+		logger.info("Attempting to login user with username: {}", user.getUsername());
+		
 		UserEntity dbPerson = userRepository.findByUsername(user.getUsername()).get();
 
 		String password=dbPerson.getPassword();
 		boolean loginStatus=passwordEncode.matches(user.getPassword(),password);
 		if(loginStatus)
 		{
+			logger.info("Login successful for username: {}", user.getUsername());
+			
 			return "Login Successful";
 		}
 		else { 
+			
+			logger.warn("Login failed for username: {}", user.getUsername());
 			
 			throw new RuntimeException("Invalid Credentials");
 		
@@ -68,14 +87,22 @@ public class UserService {
 	}
 	
 	public List<UserEntity> findAllUsers(){
+		
+		logger.info("Fetching all users"); 
+		
 		return userRepository.findAll();
 	}
 
 	public UserEntity findUserById(int id) {
+		
+		logger.info("Fetching user with ID: {}", id);
+		
 		return userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("No user by ID: " + id));
 	}
 
 	public String addAmount(int id, Double amount) {
+		
+		logger.info("Adding amount: {} to user with ID: {}", amount, id);
 		
 		Optional<UserEntity> userop=userRepository.findById(id);
 		UserEntity user=userop.get();
@@ -84,6 +111,9 @@ public class UserService {
 		{
 		user.setWallet_amount(user.getWallet_amount() + amount);
 		userRepository.save(user);
+		
+		logger.info("Amount added successfully to user with ID: {}", id);
+		
 		return "Amount added successfull";
 		}
 		else {
@@ -94,6 +124,9 @@ public class UserService {
 	}
 
 	public String deleteUser(int id) {
+		
+		logger.info("Deleting user with ID: {}", id);
+		
 		UserEntity user=userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("No user by ID: " + id));
 		userRepository.delete(user);
 		return "User Removed";

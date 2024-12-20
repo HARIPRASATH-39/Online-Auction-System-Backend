@@ -5,6 +5,8 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,9 +28,15 @@ public class AuctionService {
 	@Autowired
 	ProductRepository productRepository;
 	
+	
+	private static final Logger logger = LoggerFactory.getLogger(ProductService.class);
+
+	
 	private final ConcurrentHashMap<Integer,AuctionEntity> activeAuctions=new ConcurrentHashMap<>();
 	
 	public String placeBid(int id, int pid, AuctionEntity auction) {
+		
+		logger.info("Attempting to place a bid for user ID: {} on product ID: {}", id, pid);
 		
 		UserEntity user=userRepository.findById(id).get();
 		
@@ -39,20 +47,28 @@ public class AuctionService {
 		
 		 if(!auction.isStatus())
 		{
+			 logger.warn("Auction ended already for product ID: {}", pid);
+			 
 			return "Auction ended Already";
 		}
 		
 		else if(auction.getAmount()>user.getWallet_amount())
 		{
+			logger.warn("Entered amount is greater than the wallet amount for user ID: {}", id);
+			
 			return "Entered amount is greater than the remaining wallet amount";
 		}
 		
 		else if(auction.getAmount()<=product.getHighest_bid())
 		{
+			logger.warn("Bid should be greater than the current bid for product ID: {}", pid);
+			
 			return "Bid should be greater than the current bid";
 		}
 		else if(auction.getAmount()<=product.getPrice())
 		{
+			logger.warn("Bid should be greater than the product's price for product ID: {}", pid);
+			
 			return "Bid should be greater than the product's price";
 		}
 		
@@ -68,17 +84,20 @@ public class AuctionService {
 			auction.setProduct(product);
 			activeAuctions.put(auction.getId(), auction);
 			
+			logger.info("Bid placed successfully for user ID: {} on product ID: {}", id, pid);
 			
 			return "Bid Placed Successfully";
 	}
 		}
 		else {
+			logger.warn("The product ID: {} is already sold", pid);
+			
 			return "The product is sold already";
 		}
 	}
 
 	private void scheduleAuctionEnd(int id) {
-		System.out.println("Entered Schedule auction");
+		logger.info("Schedule auction");
 		Timer timer=new Timer();
 		timer.schedule(new TimerTask(){
 			@Override
@@ -91,7 +110,7 @@ public class AuctionService {
 	
 	private void endAuction(int id)
 	{
-		System.out.println("Entered End auction");
+		logger.info("Entered End auction");
 		
 
 		AuctionEntity auction=activeAuctions.get(id);
@@ -112,6 +131,8 @@ public class AuctionService {
 		auction.setStatus(false);
 		
 		auctionRepository.save(auction);
+		
+		logger.info("Auction ended ");
 		
 		System.out.println("auction Ended");
 
