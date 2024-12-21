@@ -96,7 +96,7 @@ public class AuctionService {
 		}
 	}
 
-	private void scheduleAuctionEnd(int id) {
+	public void scheduleAuctionEnd(int id) {
 		logger.info("Schedule auction");
 		Timer timer=new Timer();
 		timer.schedule(new TimerTask(){
@@ -108,7 +108,7 @@ public class AuctionService {
 		},120000);
 	}
 	
-	private void endAuction(int id)
+	public void endAuction(int id)
 	{
 		logger.info("Entered End auction");
 		

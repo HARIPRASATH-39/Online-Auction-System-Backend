@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 @Data
-
+@Builder
 public class UserDTO {
 	
 	@NotBlank(message = "Username should not be empty")

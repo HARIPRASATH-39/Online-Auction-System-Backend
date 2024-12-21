@@ -12,6 +12,7 @@ import lombok.Data;
 @Entity
 @Data
 @Table(name="auction")
+
 public class AuctionEntity {
 	
 	@Id

@@ -22,7 +22,6 @@ public class UserAuthorityService implements UserDetailsService {
  
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		// TODO Auto-generated method stub
 		Optional<UserEntity> user=userRepository.findByUsername(username);
 		return user.map(UserAuthority::new)
 			.orElseThrow(()->new UsernameNotFoundException("user not found"));
