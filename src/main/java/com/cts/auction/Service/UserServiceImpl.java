@@ -70,7 +70,9 @@ public class UserServiceImpl implements UserService{
 		UserEntity dbPerson = userRepository.findByUsername(user.getUsername()).get();
 
 		String password=dbPerson.getPassword();
+		
 		boolean loginStatus=passwordEncode.matches(user.getPassword(),password);
+		
 		if(loginStatus)
 		{
 			logger.info("Login successful for username: {}", user.getUsername());

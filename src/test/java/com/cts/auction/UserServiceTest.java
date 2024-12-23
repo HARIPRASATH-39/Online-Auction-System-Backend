@@ -18,7 +18,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import com.cts.auction.Entity.UserEntity;
 import com.cts.auction.Exception.UserNotFoundException;
 import com.cts.auction.Repository.UserRepository;
-import com.cts.auction.Service.UserService;
+import com.cts.auction.Service.UserServiceImpl;
 import com.cts.auction.Validation.UserDTO;
 
 @ExtendWith(MockitoExtension.class)
@@ -31,7 +31,7 @@ public class UserServiceTest {
     private PasswordEncoder passwordEncoder;
 
     @InjectMocks
-    private UserService userService;
+    private UserServiceImpl userService;
 
     private UserDTO userDTO;
     private UserEntity userEntity;

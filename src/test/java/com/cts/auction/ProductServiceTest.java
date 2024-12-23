@@ -21,7 +21,7 @@ import com.cts.auction.Exception.ProductNotFoundException;
 import com.cts.auction.Exception.UserNotFoundException;
 import com.cts.auction.Repository.ProductRepository;
 import com.cts.auction.Repository.UserRepository;
-import com.cts.auction.Service.ProductService;
+import com.cts.auction.Service.ProductServiceImpl;
 import com.cts.auction.Validation.ProductDTO;
 
 @ExtendWith(MockitoExtension.class)
@@ -34,7 +34,7 @@ public class ProductServiceTest {
     private ProductRepository productRepository;
 
     @InjectMocks
-    private ProductService productService;
+    private ProductServiceImpl productService;
 
     private UserEntity userEntity;
     private ProductEntity productEntity;
