@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.cts.auction.DisplayDTO.ProductDisplayDTO;
 import com.cts.auction.Entity.ProductEntity;
 import com.cts.auction.Service.ProductService;
 import com.cts.auction.Validation.ProductDTO;
@@ -37,7 +38,7 @@ public class ProductController {
 	}
 	
 	@GetMapping("/find/{id}")
-	public ProductEntity  findProduct(@PathVariable int id)
+	public ProductDisplayDTO  findProduct(@PathVariable int id)
 	{
 		return productService.findProduct(id);
 	}

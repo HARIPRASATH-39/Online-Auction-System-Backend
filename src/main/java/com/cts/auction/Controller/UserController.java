@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-
+import com.cts.auction.DisplayDTO.UserDisplayDTO;
 import com.cts.auction.Entity.UserEntity;
 import com.cts.auction.Service.UserService;
 import com.cts.auction.Validation.UserDTO;
@@ -47,14 +47,14 @@ public class UserController {
 	
 	@GetMapping("/listAllUsers")
 	@PreAuthorize("hasAuthority('ROLE_ADMIN')")
-	public List<UserEntity> findAllUsers()
+	public List<UserDisplayDTO> findAllUsers()
 	{
 		return userService.findAllUsers();
 	}
 	
 	@GetMapping("/find/{id}")
 	@PreAuthorize("hasAuthority('ROLE_ADMIN')")
-	public UserEntity findUserById(@PathVariable int id)
+	public UserDisplayDTO findUserById(@PathVariable int id)
 	
 	{
 		

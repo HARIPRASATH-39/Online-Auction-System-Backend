@@ -15,6 +15,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import com.cts.auction.DisplayDTO.ProductDisplayDTO;
 import com.cts.auction.Entity.ProductEntity;
 import com.cts.auction.Entity.UserEntity;
 import com.cts.auction.Exception.ProductNotFoundException;
@@ -39,6 +40,7 @@ public class ProductServiceTest {
     private UserEntity userEntity;
     private ProductEntity productEntity;
     private ProductDTO productDTO;
+    private ProductDisplayDTO productDTOdisplay;
 
     @BeforeEach
     void setUp() {
@@ -58,6 +60,10 @@ public class ProductServiceTest {
                 .productName("Test Product")
                 .price(50.0)
                 .build();
+        productDTOdisplay=ProductDisplayDTO.builder()
+        		.productName("Test Product")
+        		.price(50.0)
+        		.build();
     }
 
     @Test
@@ -86,10 +92,10 @@ public class ProductServiceTest {
     void testFindProduct_Success() {
         when(productRepository.findById(anyInt())).thenReturn(Optional.of(productEntity));
 
-        ProductEntity result = productService.findProduct(1);
+        ProductDisplayDTO result = productService.findProduct(1);
 
         assertNotNull(result);
-        assertEquals(productEntity, result);
+        assertEquals(productDTOdisplay, result);
     }
 
     @Test

@@ -29,6 +29,11 @@ public ResponseEntity<Object> handleProductNotFoundException(ProductNotFoundExce
 	return buildErrorResponse(productNotFoundException.getMessage(),HttpStatus.NOT_FOUND);
 }
 
+@ExceptionHandler(AuctionNotFoundException.class)
+public ResponseEntity<Object> handleAuctionNotFoundException(AuctionNotFoundException auctionNotFoundException){
+	return buildErrorResponse(auctionNotFoundException.getMessage(),HttpStatus.NOT_FOUND);
+}
+
 @ExceptionHandler(MethodArgumentNotValidException.class)
 public ResponseEntity<Map<String, List<String>>> handleValidationErrors(MethodArgumentNotValidException ex) {
     List<String> errors = ex.getBindingResult().getFieldErrors()

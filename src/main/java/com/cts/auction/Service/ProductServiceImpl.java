@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.cts.auction.DisplayDTO.ProductDisplayDTO;
 import com.cts.auction.Entity.ProductEntity;
 import com.cts.auction.Entity.UserEntity;
 import com.cts.auction.Exception.ProductNotFoundException;
@@ -43,11 +44,21 @@ public class ProductServiceImpl implements ProductService{
 		return "Product added successfully";
 	}
 
-	public ProductEntity findProduct(int id) {
+	public ProductDisplayDTO findProduct(int id) {
 		
 		logger.info("Attempting to find product with ID: {}", id);
 
-		return productRepository.findById(id).orElseThrow(() -> new ProductNotFoundException("No Product by ID: " + id));
+		ProductEntity product=productRepository.findById(id).orElseThrow(() -> new ProductNotFoundException("No Product by ID: " + id));
+		
+		ProductDisplayDTO productDisplay=ConvertToProductDisplay(product);
+		
+		return productDisplay; 
+	}
+
+	private ProductDisplayDTO ConvertToProductDisplay(ProductEntity product) {
+	
+		ProductDisplayDTO productdisplay =new ProductDisplayDTO(product.getId(), product.getProductName(), product.getPrice(), product.getHighest_bid(), product.getStatus());
+		return productdisplay;
 	}
 
 	public List<ProductEntity> findAllProducts() {

@@ -35,7 +35,8 @@ public class UserEntity {
 	private String roles;
 	
 
-	@PrePersist public void prePersist() 
+	@PrePersist
+	public void prePersist() 
 	{ 
 	if(roles==null)
 	{

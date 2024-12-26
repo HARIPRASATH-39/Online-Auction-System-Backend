@@ -15,6 +15,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import com.cts.auction.DisplayDTO.UserDisplayDTO;
 import com.cts.auction.Entity.UserEntity;
 import com.cts.auction.Exception.UserNotFoundException;
 import com.cts.auction.Repository.UserRepository;
@@ -35,6 +36,7 @@ public class UserServiceTest {
 
     private UserDTO userDTO;
     private UserEntity userEntity;
+    private UserDisplayDTO userdisplayDTO;
 
     @BeforeEach
     void setUp() {
@@ -51,6 +53,11 @@ public class UserServiceTest {
                 .password("encodedPassword")
                 .wallet_amount(100.0)
                 .build();
+        
+        userdisplayDTO= UserDisplayDTO.builder()
+        		.username("testuser")
+        		.email("testuser@example.com")
+        		.build();
     }
 
     @Test
@@ -105,10 +112,10 @@ public class UserServiceTest {
     void testFindUserById_Success() {
         when(userRepository.findById(1)).thenReturn(Optional.of(userEntity));
 
-        UserEntity result = userService.findUserById(1);
+        UserDisplayDTO result = userService.findUserById(1);
 
         assertNotNull(result);
-        assertEquals(userEntity, result);
+        assertEquals(userdisplayDTO, result);
     }
 
     @Test

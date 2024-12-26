@@ -1,6 +1,8 @@
 package com.cts.auction.Service;
 
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.ConcurrentHashMap;
@@ -10,9 +12,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.cts.auction.DisplayDTO.AuctionDisplayDTO;
 import com.cts.auction.Entity.AuctionEntity;
 import com.cts.auction.Entity.ProductEntity;
 import com.cts.auction.Entity.UserEntity;
+import com.cts.auction.Exception.AuctionNotFoundException;
+import com.cts.auction.Exception.UserNotFoundException;
 import com.cts.auction.Repository.AuctionRepository;
 import com.cts.auction.Repository.ProductRepository;
 import com.cts.auction.Repository.UserRepository;
@@ -138,6 +143,48 @@ public class AuctionServiceImpl implements AuctionService{
 
 		
 		
+	}
+
+	@Override
+	public List<AuctionDisplayDTO> getAllProducts() {
+		
+		logger.info("Fetching All auctions");
+
+
+		List<AuctionEntity> auctionList=auctionRepository.findAll();
+		
+		List<AuctionDisplayDTO> auctiondisplayList=new ArrayList<>();
+		
+		for(AuctionEntity auction:auctionList)
+		{
+			auctiondisplayList.add(ConvertToAuctionDisplay(auction));
+			
+		}
+		
+		
+		return auctiondisplayList;
+	}
+
+	private AuctionDisplayDTO ConvertToAuctionDisplay(AuctionEntity auction) {
+		
+		
+		
+		AuctionDisplayDTO auctionDisplayDTO=new AuctionDisplayDTO(auction.getId(), auction.getUser().getId(),auction.getUser().getUsername(), auction.getProduct().getId(),auction.getProduct().getProductName(), auction.getAmount());
+		
+		return auctionDisplayDTO;
+	}
+
+	@Override
+	public AuctionDisplayDTO getauctionbyId(int id) {
+		
+		logger.info("Fetching Auction By Id {}",id);
+
+		
+		AuctionEntity auction=auctionRepository.findById(id).orElseThrow(() -> new AuctionNotFoundException("No auction by ID: " + id));
+		
+		AuctionDisplayDTO auctiondisplay=ConvertToAuctionDisplay(auction);
+		
+		return auctiondisplay;
 	}
 
 }

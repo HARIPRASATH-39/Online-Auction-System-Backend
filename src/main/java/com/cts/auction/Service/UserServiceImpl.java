@@ -1,5 +1,6 @@
 package com.cts.auction.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -7,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-
+import com.cts.auction.DisplayDTO.UserDisplayDTO;
 import com.cts.auction.Entity.UserEntity;
 import com.cts.auction.Exception.UserNotFoundException;
 import com.cts.auction.Repository.UserRepository;
@@ -88,18 +89,35 @@ public class UserServiceImpl implements UserService{
 		}
 	}
 	
-	public List<UserEntity> findAllUsers(){
+	public List<UserDisplayDTO> findAllUsers(){
 		
 		logger.info("Fetching all users"); 
+		List<UserEntity> userList=userRepository.findAll();
+		List<UserDisplayDTO> userDTOList=new ArrayList<>();
 		
-		return userRepository.findAll();
+		for(UserEntity user:userList)
+		{
+		UserDisplayDTO userDTO=ConvertToUserDisplayDTO(user);
+		userDTOList.add(userDTO);
+		}
+		
+		return userDTOList;
 	}
 
-	public UserEntity findUserById(int id) {
+	public UserDisplayDTO findUserById(int id) {
 		
 		logger.info("Fetching user with ID: {}", id);
 		
-		return userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("No user by ID: " + id));
+		UserEntity user=userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("No user by ID: " + id));
+		
+		UserDisplayDTO userDisplayDTO=ConvertToUserDisplayDTO(user);
+		
+		return userDisplayDTO;
+	}
+
+	private UserDisplayDTO ConvertToUserDisplayDTO(UserEntity user) {
+		
+		return new UserDisplayDTO(user.getId(), user.getUsername(), user.getEmail(), user.getRoles());
 	}
 
 	public String addAmount(int id, Double amount) {

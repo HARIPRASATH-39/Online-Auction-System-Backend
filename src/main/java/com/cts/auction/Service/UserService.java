@@ -2,6 +2,7 @@ package com.cts.auction.Service;
 
 import java.util.List;
 
+import com.cts.auction.DisplayDTO.UserDisplayDTO;
 import com.cts.auction.Entity.UserEntity;
 import com.cts.auction.Validation.UserDTO;
 
@@ -11,9 +12,9 @@ public interface UserService {
 	
 	String login(UserEntity user); 
 	
-	List<UserEntity> findAllUsers(); 
+	List<UserDisplayDTO> findAllUsers(); 
 	
-	UserEntity findUserById(int id); 
+	UserDisplayDTO findUserById(int id); 
 	
 	String addAmount(int id, Double amount); String deleteUser(int id);
 }

@@ -1,5 +1,9 @@
 package com.cts.auction.Service;
 
+
+import java.util.List;
+
+import com.cts.auction.DisplayDTO.AuctionDisplayDTO;
 import com.cts.auction.Entity.AuctionEntity;
 
 public interface AuctionService {
@@ -10,5 +14,9 @@ public interface AuctionService {
 	void scheduleAuctionEnd(int id); 
 	
 	void endAuction(int id);
+
+	List<AuctionDisplayDTO> getAllProducts();
+
+	AuctionDisplayDTO getauctionbyId(int id);
 
 }
