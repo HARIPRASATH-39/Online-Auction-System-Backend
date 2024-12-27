@@ -68,13 +68,13 @@ public class AuctionServiceImpl implements AuctionService{
 		{
 			logger.warn("Bid should be greater than the current bid for product ID: {}", pid);
 			
-			return "Bid should be greater than the current bid";
+			return "Bid should be greater than the current bid\n"+"The Current Highest Bid is "+product.getHighest_bid();
 		}
 		else if(auction.getAmount()<=product.getPrice())
 		{
 			logger.warn("Bid should be greater than the product's price for product ID: {}", pid);
 			
-			return "Bid should be greater than the product's price";
+			return "Bid should be greater than the product's price\n"+"The product's price is "+product.getPrice();
 		}
 		
 		else {
@@ -91,7 +91,7 @@ public class AuctionServiceImpl implements AuctionService{
 			
 			logger.info("Bid placed successfully for user ID: {} on product ID: {}", id, pid);
 			
-			return "Bid Placed Successfully";
+			return "Bid Placed Successfully\n"+"Current highest bid is "+product.getHighest_bid();
 	}
 		}
 		else {
@@ -139,14 +139,14 @@ public class AuctionServiceImpl implements AuctionService{
 		
 		logger.info("Auction ended ");
 		
-		System.out.println("auction Ended");
+		System.out.println("Auction Ended");
 
 		
 		
 	}
 
 	@Override
-	public List<AuctionDisplayDTO> getAllProducts() {
+	public List<AuctionDisplayDTO> getAllAuctions() {
 		
 		logger.info("Fetching All auctions");
 

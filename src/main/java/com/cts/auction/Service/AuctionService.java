@@ -15,7 +15,7 @@ public interface AuctionService {
 	
 	void endAuction(int id);
 
-	List<AuctionDisplayDTO> getAllProducts();
+	List<AuctionDisplayDTO> getAllAuctions();
 
 	AuctionDisplayDTO getauctionbyId(int id);
 

@@ -63,6 +63,7 @@ public class ProductServiceTest {
         productDTOdisplay=ProductDisplayDTO.builder()
         		.productName("Test Product")
         		.price(50.0)
+        		.userName("testuser")
         		.build();
     }
 
@@ -111,11 +112,11 @@ public class ProductServiceTest {
     void testFindAllProducts() {
         when(productRepository.findAll()).thenReturn(Arrays.asList(productEntity));
 
-        List<ProductEntity> result = productService.findAllProducts();
+        List<ProductDisplayDTO> result = productService.findAllProducts();
 
         assertFalse(result.isEmpty());
         assertEquals(1, result.size());
-        assertEquals(productEntity, result.get(0));
+        assertEquals(productDTOdisplay, result.get(0));
     }
 
     @Test
@@ -133,11 +134,11 @@ public class ProductServiceTest {
         when(userRepository.findById(anyInt())).thenReturn(Optional.of(userEntity));
         when(productRepository.findByUser(any(UserEntity.class))).thenReturn(Arrays.asList(productEntity));
 
-        List<ProductEntity> result = productService.getproducts(1);
+        List<ProductDisplayDTO> result = productService.getproducts(1);
 
         assertFalse(result.isEmpty());
         assertEquals(1, result.size());
-        assertEquals(productEntity, result.get(0));
+        assertEquals(productDTOdisplay, result.get(0));
     }
 
     @Test

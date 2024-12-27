@@ -1,5 +1,6 @@
 package com.cts.auction.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.cts.auction.DisplayDTO.ProductDisplayDTO;
+import com.cts.auction.DisplayDTO.UserDisplayDTO;
 import com.cts.auction.Entity.ProductEntity;
 import com.cts.auction.Entity.UserEntity;
 import com.cts.auction.Exception.ProductNotFoundException;
@@ -57,16 +59,29 @@ public class ProductServiceImpl implements ProductService{
 
 	private ProductDisplayDTO ConvertToProductDisplay(ProductEntity product) {
 	
-		ProductDisplayDTO productdisplay =new ProductDisplayDTO(product.getId(), product.getProductName(), product.getPrice(), product.getHighest_bid(), product.getStatus());
+		ProductDisplayDTO productdisplay =new ProductDisplayDTO(
+				product.getId(), product.getProductName(), product.getPrice(),
+				product.getUser().getId(),product.getUser().getUsername(),
+				product.getHighest_bid(), product.getStatus()
+				);
 		return productdisplay;
 	}
 
-	public List<ProductEntity> findAllProducts() {
+	public List<ProductDisplayDTO> findAllProducts() {
 		
 		logger.info("Fetching all products");
+		List<ProductEntity> productList=productRepository.findAll();
 		
-		return productRepository.findAll();
-	}
+		List<ProductDisplayDTO> productDTOList=new ArrayList<>();
+		
+		for(ProductEntity product:productList)
+		{
+		ProductDisplayDTO productDTO=ConvertToProductDisplay(product);
+		productDTOList.add(productDTO);
+		}
+		return productDTOList;
+		}
+	
 
 	public String deleteById(int id) {
 		
@@ -80,12 +95,21 @@ public class ProductServiceImpl implements ProductService{
 		
 	}
 
-	public List<ProductEntity> getproducts(int id) {
+	public List<ProductDisplayDTO> getproducts(int id) {
 		
 		logger.info("Fetching products for user ID: {}", id);
 		
 		UserEntity user=userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("No user by ID: " + id));
-		return productRepository.findByUser(user);
-	}
+		List<ProductEntity> productList =productRepository.findByUser(user);
+		
+		List<ProductDisplayDTO> productDTOList=new ArrayList<>();
+		
+		for(ProductEntity product:productList)
+		{
+		ProductDisplayDTO productDTO=ConvertToProductDisplay(product);
+		productDTOList.add(productDTO);
+		}
+		return productDTOList;
+		}
 
 }

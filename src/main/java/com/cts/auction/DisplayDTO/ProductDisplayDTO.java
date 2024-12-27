@@ -12,11 +12,15 @@ import lombok.NoArgsConstructor;
 public class ProductDisplayDTO {
 	
 	
-	private int id;
+	private int productId;
 	
 	private String productName;
 	
 	private Double price;
+	
+	private int userId;
+	
+	private String userName;
 	
 	private Double highest_bid;
 	

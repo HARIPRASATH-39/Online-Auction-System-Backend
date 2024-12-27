@@ -44,7 +44,7 @@ public class ProductController {
 	}
 	
 	@GetMapping("/findAll")
-	public List<ProductEntity> findAllProducts()
+	public List<ProductDisplayDTO> findAllProducts()
 	{
 		return productService.findAllProducts();
 	}
@@ -57,7 +57,7 @@ public class ProductController {
 	}
 	
 	@GetMapping("user/{id}")
-	public List<ProductEntity> getproducts(@PathVariable int id)
+	public List<ProductDisplayDTO> getproducts(@PathVariable int id)
 	{
 		
 		return productService.getproducts(id);

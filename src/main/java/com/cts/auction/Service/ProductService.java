@@ -13,10 +13,10 @@ public interface ProductService {
 	
 	ProductDisplayDTO findProduct(int id);
 	
-	List<ProductEntity> findAllProducts(); 
+	List<ProductDisplayDTO> findAllProducts(); 
 	
 	String deleteById(int id); 
 	
-	List<ProductEntity> getproducts(int id);
+	List<ProductDisplayDTO> getproducts(int id);
 	
 }

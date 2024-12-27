@@ -31,7 +31,7 @@ public class AuctionController {
 	public List<AuctionDisplayDTO> getauction()
 	{
 		
-		return auctionService.getAllProducts();
+		return auctionService.getAllAuctions();
 	}
 	
 	@GetMapping("/get/{id}")
