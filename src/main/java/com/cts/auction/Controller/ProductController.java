@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cts.auction.DisplayDTO.ProductDisplayDTO;
-import com.cts.auction.Entity.ProductEntity;
 import com.cts.auction.Service.ProductService;
 import com.cts.auction.Validation.ProductDTO;
 

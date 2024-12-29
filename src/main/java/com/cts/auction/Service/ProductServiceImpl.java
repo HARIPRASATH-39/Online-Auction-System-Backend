@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.cts.auction.DisplayDTO.ProductDisplayDTO;
-import com.cts.auction.DisplayDTO.UserDisplayDTO;
 import com.cts.auction.Entity.ProductEntity;
 import com.cts.auction.Entity.UserEntity;
 import com.cts.auction.Exception.ProductNotFoundException;

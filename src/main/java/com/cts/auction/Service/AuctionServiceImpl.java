@@ -17,10 +17,13 @@ import com.cts.auction.Entity.AuctionEntity;
 import com.cts.auction.Entity.ProductEntity;
 import com.cts.auction.Entity.UserEntity;
 import com.cts.auction.Exception.AuctionNotFoundException;
+import com.cts.auction.Exception.ProductNotFoundException;
 import com.cts.auction.Exception.UserNotFoundException;
 import com.cts.auction.Repository.AuctionRepository;
 import com.cts.auction.Repository.ProductRepository;
 import com.cts.auction.Repository.UserRepository;
+
+import jakarta.transaction.Transactional;
 @Service
 public class AuctionServiceImpl implements AuctionService{
 
@@ -43,9 +46,10 @@ public class AuctionServiceImpl implements AuctionService{
 		
 		logger.info("Attempting to place a bid for user ID: {} on product ID: {}", id, pid);
 		
-		UserEntity user=userRepository.findById(id).get();
+		UserEntity user=userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("No user by ID: " + id));
 		
-		ProductEntity product=productRepository.findById(pid).get();
+		
+		ProductEntity product=productRepository.findById(pid).orElseThrow(() -> new ProductNotFoundException("No Product by ID: " + id));
 		
 		if(product.getStatus().equals("unsold"))
 		{
@@ -113,6 +117,7 @@ public class AuctionServiceImpl implements AuctionService{
 		},120000);
 	}
 	
+	@Transactional
 	public void endAuction(int id)
 	{
 		logger.info("Entered End auction");
@@ -127,11 +132,18 @@ public class AuctionServiceImpl implements AuctionService{
 		
 		UserEntity user=auction.getUser();
 		ProductEntity product=auction.getProduct();
+		
 		product.setStatus("sold");
 		productRepository.save(product);
-		user.setWallet_amount(user.getWallet_amount()-auction.getAmount());
 		
+		user.setWallet_amount(user.getWallet_amount() - auction.getAmount());
 		userRepository.save(user);
+		
+		
+		
+		UserEntity seller =auction.getProduct().getUser();
+		seller.setWallet_amount(seller.getWallet_amount() + auction.getAmount());
+		userRepository.save(seller);
 		
 		auction.setStatus(false);
 		
@@ -185,6 +197,20 @@ public class AuctionServiceImpl implements AuctionService{
 		AuctionDisplayDTO auctiondisplay=ConvertToAuctionDisplay(auction);
 		
 		return auctiondisplay;
+	}
+
+	@Override
+	public String deleteAuction(int id) {
+		 auctionRepository.deleteById(id);
+		 
+		 return "Auction Deleted successfully";
+	}
+
+	@Override
+	public String deleteAll() {
+
+	     auctionRepository.deleteAll();
+		return "Deleted All Auctions";
 	}
 
 }

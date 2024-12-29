@@ -19,4 +19,8 @@ public interface AuctionService {
 
 	AuctionDisplayDTO getauctionbyId(int id);
 
+	String deleteAuction(int id);
+
+	String deleteAll();
+
 }

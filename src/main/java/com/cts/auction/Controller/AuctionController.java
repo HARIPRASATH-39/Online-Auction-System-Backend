@@ -3,6 +3,7 @@ package com.cts.auction.Controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -37,5 +38,19 @@ public class AuctionController {
 	@GetMapping("/get/{id}")
 	public AuctionDisplayDTO getauctionbyId(@PathVariable int id) {
 		return auctionService.getauctionbyId(id);
+	}
+	
+	@DeleteMapping("/delete/{id}")
+	public String deleteAuction(@PathVariable int id)
+	{
+		return auctionService.deleteAuction(id);
+	}
+	
+	@DeleteMapping("/deleteAll")
+	public String DeleteAll() {
+		return auctionService.deleteAll();
+		
+		
+		
 	}
 }
