@@ -16,7 +16,7 @@ import com.cts.auction.Entity.AuctionEntity;
 import com.cts.auction.Service.AuctionService;
 
 @RestController
-@RequestMapping("/auction")
+@RequestMapping("/auction/bid")
 public class AuctionController {
 	
 	@Autowired

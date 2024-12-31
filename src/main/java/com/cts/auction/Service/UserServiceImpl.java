@@ -149,6 +149,7 @@ public class UserServiceImpl implements UserService{
 		
 		UserEntity user=userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("No user by ID: " + id));
 		userRepository.delete(user);
+		
 		return "User Removed";
 	}
 

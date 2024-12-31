@@ -62,6 +62,13 @@ public class ProductController {
 		return productService.getproducts(id);
 	}
 	
+	@DeleteMapping("/deleteAll")
+	public String deleteAll()
+	{
+		 return productService.deleteAll();
+		 
+	}
+	
 	
 	
 	

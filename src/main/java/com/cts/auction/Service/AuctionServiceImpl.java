@@ -23,7 +23,6 @@ import com.cts.auction.Repository.AuctionRepository;
 import com.cts.auction.Repository.ProductRepository;
 import com.cts.auction.Repository.UserRepository;
 
-import jakarta.transaction.Transactional;
 @Service
 public class AuctionServiceImpl implements AuctionService{
 
@@ -36,12 +35,19 @@ public class AuctionServiceImpl implements AuctionService{
 	@Autowired
 	ProductRepository productRepository;
 	
+	@Autowired
+	TransactionManagementService transactionManagementService;
+	
+	
+	
 	
 	private static final Logger logger = LoggerFactory.getLogger(AuctionServiceImpl.class);
 
 	
 	private final ConcurrentHashMap<Integer,AuctionEntity> activeAuctions=new ConcurrentHashMap<>();
 	
+	
+	@Override
 	public String placeBid(int id, int pid, AuctionEntity auction) {
 		
 		logger.info("Attempting to place a bid for user ID: {} on product ID: {}", id, pid);
@@ -49,7 +55,7 @@ public class AuctionServiceImpl implements AuctionService{
 		UserEntity user=userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("No user by ID: " + id));
 		
 		
-		ProductEntity product=productRepository.findById(pid).orElseThrow(() -> new ProductNotFoundException("No Product by ID: " + id));
+		ProductEntity product=productRepository.findById(pid).orElseThrow(() -> new ProductNotFoundException("No Product by ID: " + pid));
 		
 		if(product.getStatus().equals("unsold"))
 		{
@@ -57,27 +63,23 @@ public class AuctionServiceImpl implements AuctionService{
 		 if(!auction.isStatus())
 		{
 			 logger.warn("Auction ended already for product ID: {}", pid);
-			 
-			return "Auction ended Already";
+			 return "Auction ended Already";
 		}
 		
 		else if(auction.getAmount()>user.getWallet_amount())
 		{
 			logger.warn("Entered amount is greater than the wallet amount for user ID: {}", id);
-			
 			return "Entered amount is greater than the remaining wallet amount";
 		}
 		
 		else if(auction.getAmount()<=product.getHighest_bid())
 		{
 			logger.warn("Bid should be greater than the current bid for product ID: {}", pid);
-			
 			return "Bid should be greater than the current bid\n"+"The Current Highest Bid is "+product.getHighest_bid();
 		}
 		else if(auction.getAmount()<=product.getPrice())
 		{
 			logger.warn("Bid should be greater than the product's price for product ID: {}", pid);
-			
 			return "Bid should be greater than the product's price\n"+"The product's price is "+product.getPrice();
 		}
 		
@@ -105,6 +107,7 @@ public class AuctionServiceImpl implements AuctionService{
 		}
 	}
 
+	
 	public void scheduleAuctionEnd(int id) {
 		logger.info("Schedule auction");
 		Timer timer=new Timer();
@@ -112,50 +115,12 @@ public class AuctionServiceImpl implements AuctionService{
 			@Override
 			public void run()
 			{
-				endAuction(id);
+				transactionManagementService.endAuction(id,activeAuctions);
 			}
-		},120000);
+		},60000);
 	}
 	
-	@Transactional
-	public void endAuction(int id)
-	{
-		logger.info("Entered End auction");
-		
 
-		AuctionEntity auction=activeAuctions.get(id);
-		
-		if(!auction.isStatus())
-		{
-			return;
-		}
-		
-		UserEntity user=auction.getUser();
-		ProductEntity product=auction.getProduct();
-		
-		product.setStatus("sold");
-		productRepository.save(product);
-		
-		user.setWallet_amount(user.getWallet_amount() - auction.getAmount());
-		userRepository.save(user);
-		
-		
-		
-		UserEntity seller =auction.getProduct().getUser();
-		seller.setWallet_amount(seller.getWallet_amount() + auction.getAmount());
-		userRepository.save(seller);
-		
-		auction.setStatus(false);
-		
-		auctionRepository.save(auction);
-		
-		logger.info("Auction ended ");
-		
-		System.out.println("Auction Ended");
-
-		
-		
-	}
 
 	@Override
 	public List<AuctionDisplayDTO> getAllAuctions() {
@@ -201,6 +166,9 @@ public class AuctionServiceImpl implements AuctionService{
 
 	@Override
 	public String deleteAuction(int id) {
+		
+		AuctionEntity auction=auctionRepository.findById(id).orElseThrow(() -> new AuctionNotFoundException("No auction by ID: " + id)); 
+		
 		 auctionRepository.deleteById(id);
 		 
 		 return "Auction Deleted successfully";
@@ -210,6 +178,7 @@ public class AuctionServiceImpl implements AuctionService{
 	public String deleteAll() {
 
 	     auctionRepository.deleteAll();
+	     
 		return "Deleted All Auctions";
 	}
 

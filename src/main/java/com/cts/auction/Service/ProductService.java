@@ -17,5 +17,8 @@ public interface ProductService {
 	String deleteById(int id); 
 	
 	List<ProductDisplayDTO> getproducts(int id);
+
+	
+	String deleteAll();
 	
 }

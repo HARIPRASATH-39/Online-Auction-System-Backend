@@ -86,6 +86,8 @@ public class ProductServiceImpl implements ProductService{
 		
 		logger.info("Attempting to delete product with ID: {}", id);
 		
+		ProductEntity product=productRepository.findById(id).orElseThrow(() -> new ProductNotFoundException("No Product by ID: " + id));
+		
 		productRepository.deleteById(id);
 		
 		logger.info("Product {} has been deleted", id);
@@ -110,5 +112,13 @@ public class ProductServiceImpl implements ProductService{
 		}
 		return productDTOList;
 		}
+
+	@Override
+	public String deleteAll() {
+		
+		productRepository.deleteAll();
+		
+		return "Deleted All Products";
+	}
 
 }
