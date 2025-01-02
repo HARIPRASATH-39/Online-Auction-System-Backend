@@ -13,7 +13,6 @@ public interface AuctionService {
 	
 	void scheduleAuctionEnd(int id); 
 	
-	//void endAuction(int id);
 
 	List<AuctionDisplayDTO> getAllAuctions();
 
