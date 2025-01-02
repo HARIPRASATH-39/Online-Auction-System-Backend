@@ -36,18 +36,22 @@ public class ProductController {
 		return productService.addProduct(productDto,id);
 	}
 	
+	@ResponseStatus(HttpStatus.OK)
 	@GetMapping("/find/{id}")
 	public ProductDisplayDTO  findProduct(@PathVariable int id)
 	{
 		return productService.findProduct(id);
 	}
 	
+	@ResponseStatus(HttpStatus.OK)
 	@GetMapping("/findAll")
 	public List<ProductDisplayDTO> findAllProducts()
 	{
 		return productService.findAllProducts();
 	}
 	
+	
+	@ResponseStatus(HttpStatus.OK)
 	@DeleteMapping("/delete/{id}")
 	//@ResponseStatus(HttpStatus.NO_CONTENT)
 	public String deleteById(@PathVariable int id)
@@ -55,6 +59,7 @@ public class ProductController {
 		return productService.deleteById(id);
 	}
 	
+	@ResponseStatus(HttpStatus.OK)
 	@GetMapping("user/{id}")
 	public List<ProductDisplayDTO> getproducts(@PathVariable int id)
 	{
@@ -62,6 +67,8 @@ public class ProductController {
 		return productService.getproducts(id);
 	}
 	
+	
+	@ResponseStatus(HttpStatus.OK)
 	@DeleteMapping("/deleteAll")
 	public String deleteAll()
 	{

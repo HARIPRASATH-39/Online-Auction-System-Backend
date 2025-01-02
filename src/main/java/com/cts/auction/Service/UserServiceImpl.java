@@ -51,7 +51,7 @@ public class UserServiceImpl implements UserService{
 		            .email(userdto.getEmail())
 		            .password(userdto.getPassword())
 		            .wallet_amount(userdto.getWallet_amount())
-		           // .roles(userdto.getRoles())
+		            .roles(userdto.getRoles())
 		        .build();
 			
 			userRepository.save(user);

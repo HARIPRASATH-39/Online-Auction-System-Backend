@@ -19,5 +19,5 @@ public class UserDTO {
 	
 	private Double wallet_amount;
 	
-	//private String roles;
+	private String roles;
 }

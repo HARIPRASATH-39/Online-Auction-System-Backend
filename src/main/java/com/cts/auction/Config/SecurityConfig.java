@@ -32,7 +32,7 @@ public class SecurityConfig
  
     	http.csrf(csrf-> csrf.disable())
                 .authorizeHttpRequests((authorize)->{
-                    authorize.requestMatchers("auction/user/signup","auction/user/login","auction/user/addAmount","auction/product/**","auction/bid/**").permitAll();
+                    authorize.requestMatchers("auction/user/signup","auction/user/login","auction/product/**","auction/bid/**").permitAll();
  
                     authorize.anyRequest().authenticated();
                 }).httpBasic(Customizer.withDefaults());

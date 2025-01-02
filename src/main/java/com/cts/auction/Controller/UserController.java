@@ -40,11 +40,14 @@ public class UserController {
 		
 	}
 	
+	@ResponseStatus(HttpStatus.ACCEPTED)
 	@PostMapping("/login")
 	public String login(@RequestBody UserEntity user) {
 		return userService.login(user);
 	}
 	
+	
+	@ResponseStatus(HttpStatus.OK)
 	@GetMapping("/listAllUsers")
 	@PreAuthorize("hasAuthority('ROLE_ADMIN')")
 	public List<UserDisplayDTO> findAllUsers()
@@ -52,6 +55,8 @@ public class UserController {
 		return userService.findAllUsers();
 	}
 	
+	
+	@ResponseStatus(HttpStatus.OK)
 	@GetMapping("/find/{id}")
 	@PreAuthorize("hasAuthority('ROLE_ADMIN')")
 	public UserDisplayDTO findUserById(@PathVariable int id)
@@ -61,12 +66,17 @@ public class UserController {
 		return userService.findUserById(id);
 	}
 	
+	
+	@ResponseStatus(HttpStatus.OK)
+	@PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_USER')" )
 	@PutMapping("/addAmount/{id}/{amount}")
 	public String addAmount(@PathVariable int id,@PathVariable Double amount)
 	{
 		return userService.addAmount(id,amount);
 	}
 	
+	
+	@ResponseStatus(HttpStatus.OK)
 	@DeleteMapping("/delete/{id}")
 	@PreAuthorize("hasAuthority('ROLE_ADMIN')")
 	public String deleteUser(@PathVariable int id)
