@@ -18,6 +18,8 @@ public class ProductDisplayDTO {
 	
 	private Double price;
 	
+	private String category;
+	
 	private int userId;
 	
 	private String userName;

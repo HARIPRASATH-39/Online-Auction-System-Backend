@@ -10,10 +10,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.cts.auction.DisplayDTO.ProductDisplayDTO;
+import com.cts.auction.Entity.CategoryEntity;
 import com.cts.auction.Entity.ProductEntity;
 import com.cts.auction.Entity.UserEntity;
+import com.cts.auction.Exception.CategoryNotFoundException;
 import com.cts.auction.Exception.ProductNotFoundException;
 import com.cts.auction.Exception.UserNotFoundException;
+import com.cts.auction.Repository.CategoryRepository;
 import com.cts.auction.Repository.ProductRepository;
 import com.cts.auction.Repository.UserRepository;
 import com.cts.auction.Validation.ProductDTO;
@@ -25,19 +28,33 @@ public class ProductServiceImpl implements ProductService{
 	@Autowired
 	ProductRepository productRepository;
 	
+	@Autowired
+	CategoryRepository categoryRepository;
+	
 	private static final Logger logger = LoggerFactory.getLogger(ProductServiceImpl.class);
 
 	public String addProduct(ProductDTO productDto, int id) {
 		
 		logger.info("Attempting to add product for user ID: {}", id);
 		
-		Optional<UserEntity> userop=userRepository.findById(id);
-		UserEntity user=userop.get();
+		UserEntity user=userRepository.findById(id).orElseThrow(()-> new UserNotFoundException("User Not Found with Id "+id));
+		
+		CategoryEntity category=categoryRepository.findByCategoryName(productDto.getCategory().getCategoryName());
+		
+
+		if(category==null)
+		{
+			throw new CategoryNotFoundException("Category Not Found, Product cannot be added in "+productDto.getCategory().getCategoryName()+" category");
+		}
+		
 		ProductEntity product = ProductEntity.builder()
 	            .productName(productDto.getProductName())
 	            .price(productDto.getPrice())
 	            .user(user)
+	            .category(category)
 	             .build();
+		
+		
 		productRepository.save(product);
 		
 		logger.info("Product added successfully for user ID: {}", id);
@@ -59,9 +76,14 @@ public class ProductServiceImpl implements ProductService{
 	private ProductDisplayDTO ConvertToProductDisplay(ProductEntity product) {
 	
 		ProductDisplayDTO productdisplay =new ProductDisplayDTO(
-				product.getId(), product.getProductName(), product.getPrice(),
-				product.getUser().getId(),product.getUser().getUsername(),
-				product.getHighest_bid(), product.getStatus()
+				product.getId(), 
+				product.getProductName(), 
+				product.getPrice(),
+				product.getCategory().getCategoryName(),
+				product.getUser().getId(),
+				product.getUser().getUsername(),
+				product.getHighest_bid(),
+				product.getStatus()
 				);
 		return productdisplay;
 	}
@@ -121,4 +143,17 @@ public class ProductServiceImpl implements ProductService{
 		return "Deleted All Products";
 	}
 
+	@Override
+	public List<ProductDisplayDTO> getProductByCategory(String category) {
+
+		List<ProductEntity>productList=productRepository.findByCategory_CategoryName(category);
+		List<ProductDisplayDTO> productDTOList=new ArrayList<>();
+		
+		for(ProductEntity product:productList)
+		{
+		ProductDisplayDTO productDTO=ConvertToProductDisplay(product);
+		productDTOList.add(productDTO);
+		}
+		return productDTOList;
+		}
 }

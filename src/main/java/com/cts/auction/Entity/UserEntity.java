@@ -48,7 +48,7 @@ public class UserEntity {
 	{ 
 	if(roles==null)
 	{
-		roles="ROLE_USER";
+		roles="USER";
 	}	
 	}
 	

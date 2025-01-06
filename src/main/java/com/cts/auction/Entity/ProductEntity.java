@@ -1,8 +1,5 @@
 package com.cts.auction.Entity;
 
-
-
-
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -41,6 +38,11 @@ public class ProductEntity {
 	private Double highest_bid;
 	
 	private String status;
+	
+	
+	@ManyToOne
+	@JoinColumn(name="categoryid")
+	private CategoryEntity category;
 	
 	
 	@OneToOne(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true) 

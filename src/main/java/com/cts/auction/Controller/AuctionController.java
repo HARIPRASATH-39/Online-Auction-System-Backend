@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,6 +27,8 @@ public class AuctionController {
 	
 	@ResponseStatus(HttpStatus.ACCEPTED)
 	@PostMapping("/{id}/{pid}")
+	@PreAuthorize("hasAuthority('USER')")
+
 	public String placeBid(@PathVariable int id,@PathVariable int pid,@RequestBody AuctionEntity auction)
 	{
 		return auctionService.placeBid(id,pid,auction);
@@ -34,6 +37,7 @@ public class AuctionController {
 	
 	@ResponseStatus(HttpStatus.OK)
 	@GetMapping("/getall")
+	@PreAuthorize("hasAuthority('ADMIN')")
 	public List<AuctionDisplayDTO> getauction()
 	{
 		
@@ -42,13 +46,14 @@ public class AuctionController {
 	
 	@ResponseStatus(HttpStatus.OK)
 	@GetMapping("/get/{id}")
+	@PreAuthorize("hasAuthority('ADMIN')")
 	public AuctionDisplayDTO getauctionbyId(@PathVariable int id) {
 		return auctionService.getauctionbyId(id);
 	}
 	
 	@ResponseStatus(HttpStatus.OK)
 	@DeleteMapping("/delete/{id}")
-	
+	@PreAuthorize("hasAuthority('ADMIN')")
 	public String deleteAuction(@PathVariable int id)
 	{
 		return auctionService.deleteAuction(id);
@@ -57,6 +62,7 @@ public class AuctionController {
 	
 	@ResponseStatus(HttpStatus.OK)
 	@DeleteMapping("/deleteAll")
+	@PreAuthorize("hasAuthority('ADMIN')")
 	public String DeleteAll() {
 		return auctionService.deleteAll();
 		

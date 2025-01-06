@@ -49,7 +49,7 @@ public class UserController {
 	
 	@ResponseStatus(HttpStatus.OK)
 	@GetMapping("/listAllUsers")
-	@PreAuthorize("hasAuthority('ROLE_ADMIN')")
+	@PreAuthorize("hasAuthority('ADMIN')")
 	public List<UserDisplayDTO> findAllUsers()
 	{
 		return userService.findAllUsers();
@@ -58,7 +58,7 @@ public class UserController {
 	
 	@ResponseStatus(HttpStatus.OK)
 	@GetMapping("/find/{id}")
-	@PreAuthorize("hasAuthority('ROLE_ADMIN')")
+	@PreAuthorize("hasAuthority('ADMIN')")
 	public UserDisplayDTO findUserById(@PathVariable int id)
 	
 	{
@@ -68,7 +68,7 @@ public class UserController {
 	
 	
 	@ResponseStatus(HttpStatus.OK)
-	@PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_USER')" )
+	@PreAuthorize("hasAuthority('ADMIN') or hasAuthority('USER')" )
 	@PutMapping("/addAmount/{id}/{amount}")
 	public String addAmount(@PathVariable int id,@PathVariable Double amount)
 	{
@@ -78,7 +78,7 @@ public class UserController {
 	
 	@ResponseStatus(HttpStatus.OK)
 	@DeleteMapping("/delete/{id}")
-	@PreAuthorize("hasAuthority('ROLE_ADMIN')")
+	@PreAuthorize("hasAuthority('ADMIN')")
 	public String deleteUser(@PathVariable int id)
 	{
 		return userService.deleteUser(id);

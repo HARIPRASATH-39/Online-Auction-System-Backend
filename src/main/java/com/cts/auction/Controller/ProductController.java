@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -30,6 +31,8 @@ public class ProductController {
 	
 	@ResponseStatus(HttpStatus.CREATED)
 	@PostMapping("/add/user/{id}")
+	@PreAuthorize("hasAuthority('SELLER')")
+
 	public String addProduct(@Valid @RequestBody ProductDTO productDto,@PathVariable int id)
 	{
 		
@@ -53,7 +56,7 @@ public class ProductController {
 	
 	@ResponseStatus(HttpStatus.OK)
 	@DeleteMapping("/delete/{id}")
-	//@ResponseStatus(HttpStatus.NO_CONTENT)
+	@PreAuthorize("hasAuthority('SELLER')")
 	public String deleteById(@PathVariable int id)
 	{
 		return productService.deleteById(id);
@@ -70,12 +73,21 @@ public class ProductController {
 	
 	@ResponseStatus(HttpStatus.OK)
 	@DeleteMapping("/deleteAll")
+	@PreAuthorize("hasAuthority('SELLER')")
 	public String deleteAll()
 	{
 		 return productService.deleteAll();
 		 
 	}
 	
+	
+	@ResponseStatus(HttpStatus.OK)
+	@GetMapping("/getByCategory/{category}")
+	public List<ProductDisplayDTO> getProductByCategory(@PathVariable String category)
+	{
+		return productService.getProductByCategory(category);
+		
+	}
 	
 	
 	

@@ -20,5 +20,7 @@ public interface ProductService {
 
 	
 	String deleteAll();
+
+	List<ProductDisplayDTO> getProductByCategory(String category);
 	
 }
