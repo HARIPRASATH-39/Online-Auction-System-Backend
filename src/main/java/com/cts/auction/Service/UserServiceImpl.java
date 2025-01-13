@@ -27,8 +27,7 @@ public class UserServiceImpl implements UserService{
 	
 	private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
 
-	
-	
+		
 	public String signup(UserDTO userdto) {
 		
 		logger.info("Attempting to sign up user with email: {}",userdto.getEmail());

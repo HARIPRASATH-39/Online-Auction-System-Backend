@@ -16,5 +16,7 @@ public interface UserService {
 	
 	UserDisplayDTO findUserById(int id); 
 	
-	String addAmount(int id, Double amount); String deleteUser(int id);
+	String addAmount(int id, Double amount);
+	
+	String deleteUser(int id);
 }
