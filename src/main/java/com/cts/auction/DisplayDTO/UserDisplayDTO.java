@@ -19,4 +19,6 @@ public class UserDisplayDTO {
 	private String email;
 	
 	private String roles;
+	
+	private Double wallet_amount;
 }

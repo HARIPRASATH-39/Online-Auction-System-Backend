@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,6 +18,8 @@ import com.cts.auction.Service.CategoryService;
 
 @RestController
 @RequestMapping("auction/category")
+@CrossOrigin(origins = "http://localhost:3000") // Allow requests from this origin
+
 public class CategoryController {
 	
 	@Autowired
@@ -24,7 +27,7 @@ public class CategoryController {
 
 	
 	@GetMapping("/getAllCategory")
-	@PreAuthorize("hasAuthority('SELLER') or hasAuthority('USER')")
+	@PreAuthorize("hasAuthority('SELLER') or hasAuthority('USER') or hasAuthority('ADMIN')")
 	public List<CategoryEntity> getAllCategories()
 	{
 		return categoryService.getAllCategories();
@@ -53,7 +56,7 @@ public class CategoryController {
 	
 	
 	@GetMapping("/getCategory/{id}")
-	@PreAuthorize("hasAuthority('SELLER') or hasAuthority('USER')")
+	@PreAuthorize("hasAuthority('SELLER') or hasAuthority('USER') or hasAuthority('ADMIN')")
 	public CategoryEntity getCategoryById(@PathVariable int id)
 	{
 		return categoryService.getCategoryById(id);

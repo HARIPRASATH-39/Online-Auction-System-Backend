@@ -6,8 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.cts.auction.Entity.CategoryEntity;
+import com.cts.auction.Entity.ProductEntity;
 import com.cts.auction.Exception.CategoryNotFoundException;
 import com.cts.auction.Repository.CategoryRepository;
+import com.cts.auction.Repository.ProductRepository;
 
 
 @Service
@@ -15,6 +17,9 @@ public class CategoryServiceImpl implements CategoryService {
 
 	@Autowired
 	CategoryRepository categoryRepository;
+	
+	@Autowired
+	ProductRepository productRepository;
 	
 	@Override
 	public List<CategoryEntity> getAllCategories() {
@@ -39,8 +44,15 @@ public class CategoryServiceImpl implements CategoryService {
 	@Override
 	public void DeleteCategory(int id) {
 		
-		categoryRepository.findById(id).orElseThrow(() -> new CategoryNotFoundException("No Category by ID: " + id));
+		CategoryEntity category=categoryRepository.findById(id).orElseThrow(() -> new CategoryNotFoundException("No Category by ID: " + id));
+		
+		List<ProductEntity> products=productRepository.findByCategory_CategoryName(category.getCategoryName());
 
+		if(!products.isEmpty())
+		{
+			throw new RuntimeException("Cannot able to delete the Category... It contains some products");
+		}
+		
 		categoryRepository.deleteById(id);
 	}
 

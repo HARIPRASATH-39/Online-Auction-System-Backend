@@ -85,9 +85,9 @@ public class UserServiceTest {
         when(userRepository.findByUsername(userEntity.getUsername())).thenReturn(Optional.of(userEntity));
         when(passwordEncoder.matches(anyString(), anyString())).thenReturn(true);
 
-        String result = userService.login(userEntity);
+        UserDisplayDTO result = userService.login(userEntity);
 
-        assertEquals("Login Successful", result);
+        assertEquals(userdisplayDTO, result);
     }
 
     @Test

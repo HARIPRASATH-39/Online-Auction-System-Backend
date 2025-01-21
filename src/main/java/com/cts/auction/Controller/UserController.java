@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,6 +25,8 @@ import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("auction/user")
+@CrossOrigin(origins = "http://localhost:3000") // Allow requests from this origin
+
 public class UserController {
 	
 	@Autowired
@@ -42,7 +45,7 @@ public class UserController {
 	
 	@ResponseStatus(HttpStatus.ACCEPTED)
 	@PostMapping("/login")
-	public String login(@RequestBody UserEntity user) {
+	public UserDisplayDTO login(@RequestBody UserEntity user) {
 		return userService.login(user);
 	}
 	
@@ -58,7 +61,7 @@ public class UserController {
 	
 	@ResponseStatus(HttpStatus.OK)
 	@GetMapping("/find/{id}")
-	@PreAuthorize("hasAuthority('ADMIN')")
+	@PreAuthorize("hasAuthority('ADMIN') or hasAuthority('USER') or hasAuthority('SELLER')" )
 	public UserDisplayDTO findUserById(@PathVariable int id)
 	
 	{
@@ -68,7 +71,7 @@ public class UserController {
 	
 	
 	@ResponseStatus(HttpStatus.OK)
-	@PreAuthorize("hasAuthority('ADMIN') or hasAuthority('USER')" )
+	@PreAuthorize("hasAuthority('ADMIN') or hasAuthority('USER') or hasAuthority('SELLER')" )
 	@PutMapping("/addAmount/{id}/{amount}")
 	public String addAmount(@PathVariable int id,@PathVariable Double amount)
 	{

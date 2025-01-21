@@ -24,6 +24,8 @@ public class AuctionDisplayDTO {
 	
 	private double amount;
 	
+	private String Seller;
+	
 	
 	
 

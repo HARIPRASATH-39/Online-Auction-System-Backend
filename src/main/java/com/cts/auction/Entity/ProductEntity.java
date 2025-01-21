@@ -40,6 +40,8 @@ public class ProductEntity {
 	private String status;
 	
 	
+	
+	
 	@ManyToOne
 	@JoinColumn(name="categoryid")
 	private CategoryEntity category;

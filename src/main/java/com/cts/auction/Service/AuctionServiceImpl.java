@@ -117,7 +117,7 @@ public class AuctionServiceImpl implements AuctionService{
 			{
 				transactionManagementService.endAuction(id,activeAuctions);
 			}
-		},60000);
+		},120000);
 	}
 	
 
@@ -146,7 +146,7 @@ public class AuctionServiceImpl implements AuctionService{
 		
 		
 		
-		AuctionDisplayDTO auctionDisplayDTO=new AuctionDisplayDTO(auction.getId(), auction.getUser().getId(),auction.getUser().getUsername(), auction.getProduct().getId(),auction.getProduct().getProductName(), auction.getAmount());
+		AuctionDisplayDTO auctionDisplayDTO=new AuctionDisplayDTO(auction.getId(), auction.getUser().getId(),auction.getUser().getUsername(), auction.getProduct().getId(),auction.getProduct().getProductName(), auction.getAmount(),auction.getProduct().getUser().getUsername());
 		
 		return auctionDisplayDTO;
 	}

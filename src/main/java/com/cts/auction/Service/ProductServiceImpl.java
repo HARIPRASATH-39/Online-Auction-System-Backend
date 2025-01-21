@@ -33,7 +33,7 @@ public class ProductServiceImpl implements ProductService{
 	
 	private static final Logger logger = LoggerFactory.getLogger(ProductServiceImpl.class);
 
-	public String addProduct(ProductDTO productDto, int id) {
+	public ProductDisplayDTO addProduct(ProductDTO productDto, int id) {
 		
 		logger.info("Attempting to add product for user ID: {}", id);
 		
@@ -59,7 +59,7 @@ public class ProductServiceImpl implements ProductService{
 		
 		logger.info("Product added successfully for user ID: {}", id);
 		
-		return "Product added successfully";
+		return ConvertToProductDisplay(product);
 	}
 
 	public ProductDisplayDTO findProduct(int id) {

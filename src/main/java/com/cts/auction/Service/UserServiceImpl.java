@@ -38,7 +38,7 @@ public class UserServiceImpl implements UserService{
 		{
 			logger.warn("The email address is already registered: {}",userdto.getEmail());
 					
-			return "The email address is already registered.";
+			throw new RuntimeException("The email address is already registered.");
 		}
 		else { 
 			
@@ -63,7 +63,7 @@ public class UserServiceImpl implements UserService{
 		
 	}
 
-	public String login(UserEntity user) {
+	public UserDisplayDTO login(UserEntity user) {
 		
 		logger.info("Attempting to login user with username: {}", user.getUsername());
 		
@@ -77,7 +77,7 @@ public class UserServiceImpl implements UserService{
 		{
 			logger.info("Login successful for username: {}", user.getUsername());
 			
-			return "Login Successful";
+			return ConvertToUserDisplayDTO(dbPerson);
 		}
 		else { 
 			
@@ -116,7 +116,7 @@ public class UserServiceImpl implements UserService{
 
 	private UserDisplayDTO ConvertToUserDisplayDTO(UserEntity user) {
 		
-		return new UserDisplayDTO(user.getId(), user.getUsername(), user.getEmail(), user.getRoles());
+		return new UserDisplayDTO(user.getId(), user.getUsername(), user.getEmail(), user.getRoles(),user.getWallet_amount());
 	}
 
 	public String addAmount(int id, Double amount) {

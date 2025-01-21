@@ -10,7 +10,7 @@ public interface UserService {
 
 	String signup(UserDTO userdto); 
 	
-	String login(UserEntity user); 
+	UserDisplayDTO login(UserEntity user); 
 	
 	List<UserDisplayDTO> findAllUsers(); 
 	
