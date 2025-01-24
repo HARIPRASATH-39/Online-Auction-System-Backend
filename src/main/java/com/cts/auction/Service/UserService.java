@@ -19,4 +19,6 @@ public interface UserService {
 	String addAmount(int id, Double amount);
 	
 	String deleteUser(int id);
+
+	UserDisplayDTO updateUser(int id, UserEntity user);
 }

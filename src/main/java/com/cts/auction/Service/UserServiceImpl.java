@@ -32,13 +32,13 @@ public class UserServiceImpl implements UserService{
 		
 		logger.info("Attempting to sign up user with email: {}",userdto.getEmail());
 				
-		UserEntity dbPerson = userRepository.findByEmail(userdto.getEmail());
+		UserEntity dbPerson = userRepository.findByEmailOrUsername(userdto.getEmail(),userdto.getUsername());
 		boolean user_already_registered = dbPerson != null ? true : false;
 		if(user_already_registered)
 		{
 			logger.warn("The email address is already registered: {}",userdto.getEmail());
 					
-			throw new RuntimeException("The email address is already registered.");
+			throw new RuntimeException("The email address is already registered OR username is already taken");
 		}
 		else { 
 			
@@ -150,6 +150,22 @@ public class UserServiceImpl implements UserService{
 		userRepository.delete(user);
 		
 		return "User Removed";
+	}
+
+	@Override
+	public UserDisplayDTO updateUser(int id,UserEntity user) {
+		UserEntity dbuser=userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("No user by ID: " + id));
+		
+		dbuser.setUsername(user.getUsername());
+		
+		dbuser.setEmail(user.getEmail());
+		
+		dbuser.setPassword(passwordEncode.encode(user.getPassword()));
+
+		
+		userRepository.save(dbuser);
+		
+		return ConvertToUserDisplayDTO(dbuser);
 	}
 
 

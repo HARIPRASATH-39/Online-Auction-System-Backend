@@ -4,19 +4,25 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.cts.auction.DisplayDTO.ProductDisplayDTO;
 import com.cts.auction.Entity.ProductEntity;
+import com.cts.auction.Exception.ProductNotFoundException;
+import com.cts.auction.Repository.ProductRepository;
 import com.cts.auction.Service.ProductService;
 import com.cts.auction.Validation.ProductDTO;
 
@@ -33,17 +39,27 @@ public class ProductController {
 	@Autowired
 	ProductService productService;
 	
+	@Autowired
+	ProductRepository productRepository;
+	
 	
 	
 	@ResponseStatus(HttpStatus.CREATED)
 	@PostMapping("/add/user/{id}")
 	@PreAuthorize("hasAuthority('SELLER')")
 
-	public ProductDisplayDTO addProduct(@Valid @RequestBody ProductDTO productDto,@PathVariable int id)
-	{
-		
-		return productService.addProduct(productDto,id);
-	}
+	public ResponseEntity<?> addProduct(
+            @RequestPart("product") ProductDTO productDto,
+            @RequestPart("image") MultipartFile imageFile,
+            @PathVariable int id
+    ) {
+        try {
+            ProductDisplayDTO productDisplay = productService.addProduct(productDto, id, imageFile);
+            return new ResponseEntity<>(productDisplay, HttpStatus.CREATED);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 	
 	@ResponseStatus(HttpStatus.OK)
 	@GetMapping("/find/{id}")
@@ -96,7 +112,24 @@ public class ProductController {
 	}
 	
 	
+	@GetMapping("/image/{id}")
+	public ResponseEntity<byte[]> getImage(@PathVariable int id) {
+	    ProductEntity product = productRepository.findById(id)
+	            .orElseThrow(() -> new ProductNotFoundException("Product not found with ID: " + id));
+
+	    return ResponseEntity.ok()
+	            .header("Content-Type", product.getImageType())
+	            .body(product.getImageData());
+	}
+	
 	
 	
 
-}
+		
+	}
+	
+	
+	
+	
+
+

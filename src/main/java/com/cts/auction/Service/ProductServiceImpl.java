@@ -1,5 +1,6 @@
 package com.cts.auction.Service;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -8,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.cts.auction.DisplayDTO.ProductDisplayDTO;
 import com.cts.auction.Entity.CategoryEntity;
@@ -33,34 +35,39 @@ public class ProductServiceImpl implements ProductService{
 	
 	private static final Logger logger = LoggerFactory.getLogger(ProductServiceImpl.class);
 
-	public ProductDisplayDTO addProduct(ProductDTO productDto, int id) {
-		
-		logger.info("Attempting to add product for user ID: {}", id);
-		
-		UserEntity user=userRepository.findById(id).orElseThrow(()-> new UserNotFoundException("User Not Found with Id "+id));
-		
-		CategoryEntity category=categoryRepository.findByCategoryName(productDto.getCategory().getCategoryName());
-		
+	public ProductDisplayDTO addProduct(ProductDTO productDto, int id, MultipartFile imageFile) throws IOException {
+        logger.info("Attempting to add product for user ID: {}", id);
 
-		if(category==null)
-		{
-			throw new CategoryNotFoundException("Category Not Found, Product cannot be added in "+productDto.getCategory().getCategoryName()+" category");
-		}
-		
-		ProductEntity product = ProductEntity.builder()
-	            .productName(productDto.getProductName())
-	            .price(productDto.getPrice())
-	            .user(user)
-	            .category(category)
-	             .build();
-		
-		
-		productRepository.save(product);
-		
-		logger.info("Product added successfully for user ID: {}", id);
-		
-		return ConvertToProductDisplay(product);
-	}
+        UserEntity user = userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException("User Not Found with Id " + id));
+
+        CategoryEntity category = categoryRepository.findByCategoryName(productDto.getCategory().getCategoryName());
+        if (category == null) {
+            throw new CategoryNotFoundException("Category Not Found, Product cannot be added in " + productDto.getCategory().getCategoryName() + " category");
+        }
+
+        // Set image metadata and data
+        productDto.setImageName(imageFile.getOriginalFilename());
+        productDto.setImageType(imageFile.getContentType());
+        productDto.setImageData(imageFile.getBytes());
+
+        ProductEntity product = ProductEntity.builder()
+                .productName(productDto.getProductName())
+                .price(productDto.getPrice())
+                .user(user)
+                .category(category)
+                .imageName(productDto.getImageName())
+                .imageType(productDto.getImageType())
+                .imageData(productDto.getImageData())
+                .build();
+
+        productRepository.save(product);
+
+        logger.info("Product added successfully for user ID: {}", id);
+
+        return ConvertToProductDisplay(product);
+    }
+
 
 	public ProductDisplayDTO findProduct(int id) {
 		
@@ -156,4 +163,7 @@ public class ProductServiceImpl implements ProductService{
 		}
 		return productDTOList;
 		}
+
+
+	
 }

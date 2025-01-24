@@ -6,6 +6,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.PrePersist;
@@ -49,6 +50,13 @@ public class ProductEntity {
 	
 	@OneToOne(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true) 
 	private AuctionEntity auctions;
+	
+	
+	   private String imageName; // Name of the image file
+	    private String imageType; // MIME type of the image (e.g., image/jpeg)
+	    
+	    @Lob // Large object (BLOB)
+	    private byte[] imageData; 
 	
 	@PrePersist public void prePersist() 
 	{ if (highest_bid == null) {

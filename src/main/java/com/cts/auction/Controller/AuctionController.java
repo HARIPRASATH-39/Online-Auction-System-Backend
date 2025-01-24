@@ -72,4 +72,11 @@ public class AuctionController {
 		
 		
 	}
+	
+	@GetMapping("/getbyuser/{id}")
+	@PreAuthorize("hasAuthority('ADMIN') or hasAuthority('USER')")
+	public List<AuctionDisplayDTO> getAuctionByUser(@PathVariable int id)
+	{
+		return auctionService.getAuctionByUser(id);
+	}
 }

@@ -30,7 +30,9 @@ public class ProductDTO {
 	@NotNull(message="Category should not be empty")
 	private CategoryEntity category;
 	
-	
+	   private String imageName; 
+	    private String imageType;
+	    private byte[] imageData; 
 	
 
 }

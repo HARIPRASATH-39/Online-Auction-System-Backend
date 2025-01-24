@@ -88,5 +88,14 @@ public class UserController {
 	}
 	
 	
+	@ResponseStatus(HttpStatus.OK)
+	@PutMapping("/update/{id}")
+	@PreAuthorize("hasAuthority('ADMIN') or hasAuthority('SELLER') or hasAuthority('USER')")
+	public UserDisplayDTO updateUser(@PathVariable int id,@RequestBody UserEntity user)
+	{
+		return userService.updateUser(id,user);
+	}
+	
+	
 	
 }

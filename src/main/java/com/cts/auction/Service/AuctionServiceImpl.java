@@ -69,7 +69,7 @@ public class AuctionServiceImpl implements AuctionService{
 		else if(auction.getAmount()>user.getWallet_amount())
 		{
 			logger.warn("Entered amount is greater than the wallet amount for user ID: {}", id);
-			return "Entered amount is greater than the remaining wallet amount";
+			throw new RuntimeException("Entered amount is greater than the remaining wallet amount");
 		}
 		
 		else if(auction.getAmount()<=product.getHighest_bid())
@@ -117,7 +117,7 @@ public class AuctionServiceImpl implements AuctionService{
 			{
 				transactionManagementService.endAuction(id,activeAuctions);
 			}
-		},120000);
+		},90000);
 	}
 	
 
@@ -180,6 +180,27 @@ public class AuctionServiceImpl implements AuctionService{
 	     auctionRepository.deleteAll();
 	     
 		return "Deleted All Auctions";
+	}
+
+
+	@Override
+	public List<AuctionDisplayDTO> getAuctionByUser(int id) {
+		
+		UserEntity user=userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("No user by ID: " + id));
+
+		List<AuctionEntity> auctionlist= auctionRepository.findByUser(user);
+		
+List<AuctionDisplayDTO> auctiondisplayList=new ArrayList<>();
+		
+		for(AuctionEntity auction:auctionlist)
+		{
+			auctiondisplayList.add(ConvertToAuctionDisplay(auction));
+			
+		}
+		
+		
+		return auctiondisplayList;
+		
 	}
 
 }

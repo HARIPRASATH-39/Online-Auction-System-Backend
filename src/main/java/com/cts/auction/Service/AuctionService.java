@@ -22,4 +22,6 @@ public interface AuctionService {
 
 	String deleteAll();
 
+	List<AuctionDisplayDTO> getAuctionByUser(int id);
+
 }
