@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.cts.auction.DisplayDTO.LoginDisplayDTO;
 import com.cts.auction.DisplayDTO.UserDisplayDTO;
 import com.cts.auction.Entity.UserEntity;
 import com.cts.auction.Service.UserService;
@@ -45,7 +46,7 @@ public class UserController {
 	
 	@ResponseStatus(HttpStatus.ACCEPTED)
 	@PostMapping("/login")
-	public UserDisplayDTO login(@RequestBody UserEntity user) {
+	public LoginDisplayDTO login(@RequestBody UserEntity user) {
 		return userService.login(user);
 	}
 	

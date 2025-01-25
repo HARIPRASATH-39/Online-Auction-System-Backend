@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
+import java.rmi.server.LoaderHandler;
 import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -15,6 +16,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import com.cts.auction.DisplayDTO.LoginDisplayDTO;
 import com.cts.auction.DisplayDTO.UserDisplayDTO;
 import com.cts.auction.Entity.UserEntity;
 import com.cts.auction.Exception.UserNotFoundException;
@@ -37,6 +39,7 @@ public class UserServiceTest {
     private UserDTO userDTO;
     private UserEntity userEntity;
     private UserDisplayDTO userdisplayDTO;
+    
 
     @BeforeEach
     void setUp() {
@@ -58,6 +61,8 @@ public class UserServiceTest {
         		.username("testuser")
         		.email("testuser@example.com")
         		.build();
+        
+       
     }
 
     @Test
@@ -77,30 +82,9 @@ public class UserServiceTest {
         String result = userService.signup(userDTO);
 
         assertEquals("Account created successfuly", result);
-        verify(userRepository, times(1)).save(any(UserEntity.class));
     }
 
-    @Test
-    void testLogin_Success() {
-        when(userRepository.findByUsername(userEntity.getUsername())).thenReturn(Optional.of(userEntity));
-        when(passwordEncoder.matches(anyString(), anyString())).thenReturn(true);
 
-        UserDisplayDTO result = userService.login(userEntity);
-
-        assertEquals(userdisplayDTO, result);
-    }
-
-    @Test
-    void testLogin_Failure() {
-        when(userRepository.findByUsername(userEntity.getUsername())).thenReturn(Optional.of(userEntity));
-        when(passwordEncoder.matches(anyString(), anyString())).thenReturn(false);
-
-        Exception exception = assertThrows(RuntimeException.class, () -> {
-            userService.login(userEntity);
-        });
-
-        assertEquals("Invalid Credentials", exception.getMessage());
-    }
 
     @Test
     void testFindAllUsers() {

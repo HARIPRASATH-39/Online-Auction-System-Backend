@@ -8,10 +8,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.cts.auction.DisplayDTO.LoginDisplayDTO;
 import com.cts.auction.DisplayDTO.UserDisplayDTO;
 import com.cts.auction.Entity.UserEntity;
 import com.cts.auction.Exception.UserNotFoundException;
 import com.cts.auction.Repository.UserRepository;
+import com.cts.auction.Security.JwtUtils;
 import com.cts.auction.Validation.UserDTO;
 import org.slf4j.Logger; 
 import org.slf4j.*;
@@ -23,6 +25,9 @@ public class UserServiceImpl implements UserService{
 	
 	@Autowired
 	PasswordEncoder passwordEncode;
+	
+	@Autowired
+	JwtUtils jwtUtils;
 	
 	
 	private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
@@ -63,7 +68,7 @@ public class UserServiceImpl implements UserService{
 		
 	}
 
-	public UserDisplayDTO login(UserEntity user) {
+	public LoginDisplayDTO login(UserEntity user) {
 		
 		logger.info("Attempting to login user with username: {}", user.getUsername());
 		
@@ -75,9 +80,12 @@ public class UserServiceImpl implements UserService{
 		
 		if(loginStatus)
 		{
+			String token = jwtUtils.generateToken(user);
 			logger.info("Login successful for username: {}", user.getUsername());
 			
-			return ConvertToUserDisplayDTO(dbPerson);
+			LoginDisplayDTO loginDisplayDTO=new LoginDisplayDTO(dbPerson.getId(), dbPerson.getUsername(), token,dbPerson.getRoles());
+			
+			return loginDisplayDTO;
 		}
 		else { 
 			

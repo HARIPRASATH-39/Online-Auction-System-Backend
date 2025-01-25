@@ -21,4 +21,6 @@ public class UserDisplayDTO {
 	private String roles;
 	
 	private Double wallet_amount;
+	
+	
 }
