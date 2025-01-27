@@ -111,6 +111,15 @@ public class ProductController {
 		
 	}
 	
+
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	@GetMapping("/image/{id}")
 	public ResponseEntity<byte[]> getImage(@PathVariable int id) {
