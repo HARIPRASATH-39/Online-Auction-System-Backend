@@ -28,5 +28,7 @@ public interface ProductService {
 
 	List<ProductDisplayDTO> getProductByCategory(String category);
 
+	ProductDisplayDTO updateProducts(int id,ProductDTO productdto);
+
 	
 }

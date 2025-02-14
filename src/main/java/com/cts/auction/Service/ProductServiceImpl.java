@@ -165,5 +165,25 @@ public class ProductServiceImpl implements ProductService{
 		}
 
 
+	@Override
+	public ProductDisplayDTO updateProducts(int id,ProductDTO productdto) {
+		ProductEntity product=productRepository.findById(id).orElseThrow(()-> new ProductNotFoundException("PRODUCT NOT FOUND"));
+		
+		product.setProductName(productdto.getProductName());
+		product.setPrice(productdto.getPrice());
+
+        CategoryEntity category = categoryRepository.findByCategoryName(productdto.getCategory().getCategoryName());
+        if (category == null) {
+            throw new CategoryNotFoundException("Category Not Found, Product cannot be added in " + productdto.getCategory().getCategoryName() + " category");
+        }
+		product.setCategory(category);
+		
+		productRepository.save(product);
+		
+		
+		return ConvertToProductDisplay(product);
+	}
+
+
 	
 }

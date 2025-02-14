@@ -112,9 +112,15 @@ public class ProductController {
 	}
 	
 
-	
-	
-	
+	@ResponseStatus(HttpStatus.OK)
+	@PreAuthorize("hasAuthority('SELLER')")
+	@PutMapping("/updateProduct/{id}")
+	public ProductDisplayDTO upadteProducts(@PathVariable int id,@Valid @RequestBody ProductDTO productdto) {
+		
+	 ProductDisplayDTO product=productService.updateProducts(id,productdto);
+	 
+	 return product;
+	}
 	
 	
 	
